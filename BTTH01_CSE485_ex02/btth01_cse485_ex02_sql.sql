@@ -1,11 +1,10 @@
--- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th9 23, 2023 lúc 06:02 PM
+-- Thời gian đã tạo: Th10 03, 2023 lúc 01:15 PM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
--- Phiên bản PHP: 8.2.4
+-- Phiên bản PHP: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,16 +27,37 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `baiviet` (
-  `ma_baiviet` int(20) UNSIGNED NOT NULL,
+  `ma_baiviet` int(10) UNSIGNED NOT NULL,
   `tieude` varchar(200) NOT NULL,
   `ten_bhat` varchar(100) NOT NULL,
   `ma_tloai` int(10) UNSIGNED NOT NULL,
   `tomtat` text NOT NULL,
-  `noidung` text NOT NULL,
-  `ma_tgia` int(20) UNSIGNED NOT NULL,
+  `noidung` text DEFAULT NULL,
+  `ma_tgia` int(10) UNSIGNED NOT NULL,
   `ngayviet` date NOT NULL,
   `hinhanh` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `nguoidung`
+--
+
+CREATE TABLE `nguoidung` (
+  `id` int(10) NOT NULL,
+  `user_name` varchar(50) NOT NULL,
+  `pw` varchar(10) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `mobile` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `nguoidung`
+--
+
+INSERT INTO `nguoidung` (`id`, `user_name`, `pw`, `email`, `mobile`) VALUES
+(5, 'caarmly', 'abc', 'abc@gmail.com', '0865486xxx');
 
 -- --------------------------------------------------------
 
@@ -46,7 +66,7 @@ CREATE TABLE `baiviet` (
 --
 
 CREATE TABLE `tacgia` (
-  `ma_tgia` int(20) UNSIGNED NOT NULL,
+  `ma_tgia` int(10) UNSIGNED NOT NULL,
   `ten_tgia` varchar(100) NOT NULL,
   `hinh_tgia` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -72,35 +92,23 @@ CREATE TABLE `theloai` (
 ALTER TABLE `baiviet`
   ADD PRIMARY KEY (`ma_baiviet`),
   ADD KEY `ma_tloai` (`ma_tloai`),
-  ADD KEY `baiviet_ibfk_1` (`ma_tgia`);
+  ADD KEY `ma_tgia` (`ma_tgia`);
 
 --
--- Chỉ mục cho bảng `tacgia`
+-- Chỉ mục cho bảng `nguoidung`
 --
-ALTER TABLE `tacgia`
-  ADD PRIMARY KEY (`ma_tgia`);
-
---
--- Chỉ mục cho bảng `theloai`
---
-ALTER TABLE `theloai`
-  ADD PRIMARY KEY (`ma_tloai`);
+ALTER TABLE `nguoidung`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT cho các bảng đã đổ
 --
 
 --
--- AUTO_INCREMENT cho bảng `baiviet`
+-- AUTO_INCREMENT cho bảng `nguoidung`
 --
-ALTER TABLE `baiviet`
-  MODIFY `ma_baiviet` int(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT cho bảng `tacgia`
---
-ALTER TABLE `tacgia`
-  MODIFY `ma_tgia` int(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `nguoidung`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
@@ -110,7 +118,8 @@ ALTER TABLE `tacgia`
 -- Các ràng buộc cho bảng `baiviet`
 --
 ALTER TABLE `baiviet`
-  ADD CONSTRAINT `baiviet_ibfk_1` FOREIGN KEY (`ma_tgia`) REFERENCES `baiviet` (`ma_baiviet`);
+  ADD CONSTRAINT `ma_tgia` FOREIGN KEY (`ma_tgia`) REFERENCES `baiviet` (`ma_baiviet`),
+  ADD CONSTRAINT `ma_tloai` FOREIGN KEY (`ma_tloai`) REFERENCES `baiviet` (`ma_baiviet`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
